@@ -8,10 +8,9 @@ version = 1.0
 requirements = python3,kivy
 orientation = portrait
 android.permissions = 
-android.api = 33
-android.ndk = 25b
-# (For full builds run on Linux/WSL or use CI) 
+ android.minapi = 21
+ android.api = 33
+ android.ndk = 25b
+ android.sdk_path = $HOME/Android/Sdk
 
-[buildozer]
-log_level = 2
-warn_on_root = 1
+# (For full builds run on Linux/WSL or use CI)

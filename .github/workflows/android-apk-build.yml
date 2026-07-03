@@ -20,7 +20,21 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk-headless python3-pip python3-setuptools python3-dev build-essential libssl-dev libffi-dev libjpeg-dev zlib1g-dev
+          sudo apt-get install -y git zip unzip openjdk-17-jdk-headless python3-pip python3-setuptools python3-dev build-essential libssl-dev libffi-dev libjpeg-dev zlib1g-dev wget
+
+      - name: Install Android SDK command-line tools
+        run: |
+          export ANDROID_HOME="$HOME/Android/Sdk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          mkdir -p "$ANDROID_HOME/cmdline-tools"
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d /tmp/
+          mkdir -p "$ANDROID_HOME/cmdline-tools/latest"
+          mv /tmp/cmdline-tools/* "$ANDROID_HOME/cmdline-tools/latest/"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653" "cmdline-tools;latest"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "PATH=$HOME/.local/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
 
       - name: Install Buildozer and Kivy
         run: |
